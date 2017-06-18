@@ -1,4 +1,4 @@
-import socket, time, sys, select
+import socket, time, sys, threading
 
 desc = 'provides a tcp socket client and server similar to netcat'
 author = 'nwx'
@@ -10,15 +10,24 @@ def connect():
 	sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 	try:
 		sock.connect((host,port))
+		sock.setblocking(0)
+		sock.settimeout(0.05)
+		def readthread():
+			try:
+				while 1:
+					sock.sendall(sys.stdin.read(1))
+			except (socket.error,socket.herror,socket.gaierror,socket.timeout) as e:
+				return
+		t = threading.Thread(target=readthread)
+		t.start()
 		while 1:
-			r,w,x = select.select([sock,sys.stdin],[],[])
-			if sock in r:
-				inp = sock.recv(1024)
-				sys.stdout.write(inp)
+			try:
+				sys.stdout.write(sock.recv(1024))
 				sys.stdout.flush()
-			if sys.stdin in r:
-				inp = sys.stdin.read()
-				sock.write(inp)
+			except socket.timeout as e:
+				pass
+	except socket.error as e:
+		print 'socket error: ',repr(e)
 	except (socket.herror,socket.gaierror,socket.timeout) as e:
 		print 'could not connect: ',e
 	except KeyboardInterrupt:

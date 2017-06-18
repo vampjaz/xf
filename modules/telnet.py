@@ -21,7 +21,7 @@ def telnetbf():
 	port = input('port to connect to> ')
 	pwlist = raw_input('password list> ').strip()
 	prompt = raw_input('the password prompt (the cue to send the password, usually "Password: ")> ')
-	incorrect = raw_input('first thing the server says if password is incorrect (cue to disconnect and try another)? ')
+	incorrect = raw_input('first thing the server says if password is incorrect (cue to disconnect and try another)> ')
 	def try_pass(pw):
 		try:
 			tel = telnetlib.Telnet()
@@ -29,7 +29,7 @@ def telnetbf():
 			tel.read_until(prompt,5)
 			tel.write(pw)
 			tel.write('\n')
-			ret = tel.read_until(incorrect,5)
+			ret = tel.read_until(incorrect,3)
 			tel.close()
 			if incorrect in ret:
 				return False
