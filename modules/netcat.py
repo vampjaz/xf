@@ -5,13 +5,14 @@ author = 'nwx'
 cmds = []
 
 def connect():
+	print "not yet implemented" ##################################################### TODO
+	return
 	host = raw_input('host? ')
 	port = input('port? ')
 	sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 	try:
 		sock.connect((host,port))
-		print "not yet implemented" ##################################################### TODO
-		return
+
 	except (socket.herror,socket.gaierror,socket.timeout) as e:
 		print 'could not connect: ',e
 	except KeyboardInterrupt:
