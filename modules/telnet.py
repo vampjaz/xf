@@ -34,8 +34,8 @@ def telnetbf():
 			if incorrect in ret:
 				return False
 			return True
-		except socket.error, socket.herror, socket.gaierror, socket.timeout, telnetlib.EOFError:
+		except (socket.error, socket.herror, socket.gaierror, socket.timeout, telnetlib.EOFError):
 			return False
 	zc = zippycrack(try_pass,pwlist,num_threads=4,cont=False)
-
-cmds.append(('telnetbf','brute-force a telnet password',telnebf))
+	zc.run()
+cmds.append(('telnetbf','brute-force a telnet password',telnetbf))

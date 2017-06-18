@@ -1,18 +1,24 @@
-import socket, time, sys
+import socket, time, sys, select
 
 desc = 'provides a tcp socket client and server similar to netcat'
 author = 'nwx'
 cmds = []
 
 def connect():
-	print "not yet implemented" ##################################################### TODO
-	return
 	host = raw_input('host? ')
 	port = input('port? ')
 	sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 	try:
 		sock.connect((host,port))
-
+		while 1:
+			r,w,x = select.select([sock,sys.stdin],[],[])
+			if sock in r:
+				inp = sock.recv(1024)
+				sys.stdout.write(inp)
+				sys.stdout.flush()
+			if sys.stdin in r:
+				inp = sys.stdin.read()
+				sock.write(inp)
 	except (socket.herror,socket.gaierror,socket.timeout) as e:
 		print 'could not connect: ',e
 	except KeyboardInterrupt:

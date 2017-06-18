@@ -8,6 +8,8 @@ this doesn't cheat by simply running os.system() and using existing unix command
 
     pip install pyping requests beautifulsoup pywhois scapy pypcap paramiko pillow qrcode zbarlight
 
+it should be noted that the program will still work fine if you don't install all the dependencies. it will just disable the modules with unmet dependencies...
+
 also follow instructions here to get scapy fully installed if it can't find dumbnet: https://stackoverflow.com/a/40924921
 
 zbarlight needs extra dependencies that can't be installed with pip: http://zbar.sourceforge.net/
