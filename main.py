@@ -67,11 +67,16 @@ print 'loaded {} modules containing {} commands in {} seconds with {} unloaded d
 
 # builtin commands:
 
-def help():
+def quitapp():
+	print 'see you later and happy hacking!'
+	exit()
+commands['quit'] = ('_builtin','exits the app if you are too busy to use ctrl-c',quitapp)
+
+def halp():
 	print 'Command listing:'
 	for i in sorted(commands.keys()):
 		print '{} - {} (from {})'.format(i.ljust(15),commands[i][1],commands[i][0])
-commands['help'] = ('_builtin','displays the list of commands',help)
+commands['help'] = ('_builtin','displays the list of commands',halp)
 
 def modlist():
 	print 'Modules loaded:'
@@ -85,6 +90,17 @@ def reports():
 		print i
 commands['report'] = ('_builtin','displays the module loading reports',reports)
 
+def loopcmd(args):
+	if len(args) < 1:
+		print 'you need to provide a command to loop: loop <cmd>'
+	mod,desc,func = commands.get(args[0],('','',False))
+	if func:
+		while True:
+			func()
+	else:
+		print 'that command does not seem to exist. look at the available commands with `help` or see why a module may not have loaded with `report`'
+commands['loop'] = ('_builtin','loops the given command until you kill it with ctrl-c',loopcmd)
+
 #### todo: work on directory changing, listing, basic file stuff
 
 # banner
@@ -95,13 +111,25 @@ print
 
 # main command loop
 
-while True:
-	cmd = raw_input("> ")
-	mod,desc,func = commands.get(cmd,('','',False))
-	if func:
-		try:
-			func()
-		except KeyboardInterrupt:
-			print 'returning to main menu...'
-	else:
-		print 'that command does not seem to exist. look at the available commands with `help` or see why a module may not have loaded with `report`'
+try:
+	while True:
+		cmd = raw_input("> ").strip().split()
+		if len(cmd) < 1:
+			print 'try again...'
+			continue
+		args = cmd[1:]
+		mod,desc,func = commands.get(cmd[0],('','',False))
+		if func:
+			try:
+				if func.__code__.co_argcount > 0:
+					func(args)
+				else:
+					func()
+			except KeyboardInterrupt:
+				print
+				print 'returning to main menu...'
+		else:
+			print 'that command does not seem to exist. look at the available commands with `help` or see why a module may not have loaded with `report`'
+except KeyboardInterrupt:
+	print
+	quitapp()

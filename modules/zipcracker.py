@@ -8,8 +8,6 @@ desc = 'multi-threaded zipfile password bruteforcer'
 author = 'nwx'
 cmds = []
 
-
-
 def zipcracker():
 	filename = raw_input('zip file> ').strip()
 	pwlist = raw_input('password list file> ').strip()

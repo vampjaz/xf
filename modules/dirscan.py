@@ -17,3 +17,4 @@ def scansite():
 		if r.response_code in [200,301,302,303]:
 			print url,' - ',r.response_code
 		time.sleep(delay)
+cmds.append(('dirbust','brute-forces website urls using a list',scansite))
